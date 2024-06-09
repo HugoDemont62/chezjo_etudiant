@@ -1,0 +1,92 @@
+#############
+## Sujet 1
+#############
+
+La friterie chezJo, dont la réputation n'est plus à faire à l'IUT de Lens se modernise.
+Nous vous proposons de participer au développement d'une application mobile permettant de fluidifier la prise de commande.
+
+Il s'agit d'un site Internet, accessible uniquement sur mobile permettant de passer des commandes.
+Les commandes sont à venir payer et retirer sur place.
+
+Le fichier data.sql, situé en racine du projet vous permet de charger votre base de données avec un jeu de données minimal.
+
+Evaluation :
+2 notes comptant dans les modules développement web et intégration web.
+Partie dev (PHP) : 10pts
+Partie HTML/CSS : 10pts
+
+
+Votre travail :
+####################
+1) développer la page d'accueil du site listant les catégories de produits disponibles. Le visuel de cette page
+sera conforme au visuel du fichier categories.png.
+
+Quelques informations :
+  - URL : index.php?action=categories
+  - Requête SQL : "select * from categorie"
+  - On utilisera le moteur de templates Blade pour générer les vues.
+    Le menu sera factorisé dans le layout général afin de le rendre visible sur toutes les pages du site.
+  - Eléments de design :
+       - Le titre de l'application : font-family: Caveat;
+       - Le reste du site : font-family: 'Maven Pro';
+       - les boutons : #FF8811 (orange)
+                       #A04668 (violet)
+       - la bordure de chaque catégorie : border: solid 1px rgba(235,84,105);
+       - le dégradé pour le nom de la catégorie : background: linear-gradient(135deg, #FF8811 60%, #A04668 );
+
+
+
+####################
+2) développer la page categorie du site listant les produits disponibles dans une catégorie donnée. Le visuel de cette page
+sera conforme au visuel du fichier categorie.png.
+
+Quelques informations :
+  - URL : index.php?action=categorie&index=XX (avec XX représentant l'ID de la catégorie)
+  - Requête SQL : "select * from categorie where id=XX"; (pour obtenir le nom de la catégorie)
+                  "select * from produit where idCategorie=XX"; (pour obtenir les produits de la catégorie XX)
+  - On utilisera le moteur de templates Blade pour générer les vues.
+  - L'action pour ajouter un produit dans le panier est déjà codée : index.php?action=add&refPdt=Z (avec Z l'ID du produit)
+  - Eléments de design :
+      - la bordure de chaque produit :     border-bottom: solid 1px #FF8811;
+                                           border-right: solid 2px #FF8811;
+
+
+####################
+3) développer la page panier du site listant les produits enregistrés dans le panier et affichant le formulaire de commande. Le visuel de cette page
+sera conforme au visuel du fichier panier.png.
+  - URL : index.php?action=panier
+  - Requête SQL : "select * from produit where id=XX"; (pour obtenir le produit XX)
+
+    IMPORTANT :
+    Le panier est une variable de session : $_SESSION['panier']. Il s'agit d'un tableau associatif dont les clefs représentent les identifiants des produits et les valeurs la quantité de chaque produit.
+    Par exemple $_SESSION = [ "3" => 2, "8" => 1]
+    Le panier contient le produit d'ID=3 en quantité 2 et le produit d'ID=8 en quantité 1.
+
+    Pour s'afficher correctement la vue doit disposer d'un tableau contenant les produits du panier de la forme : [nom, prix, quantité]
+    Pour fabriquer ce tableau, vous pouvez parcourir la variable $_SESSION['panier'] et effectuer une requête SQL pour obtenir le nom et le prix en fonction de la référence du produit.
+
+    Il faut également penser en même temps à calculer le coût total du panier.
+
+  - On utilisera le moteur de templates Blade pour générer les vues.
+  - L'action pour ajouter un produit dans le panier est déjà codée : index.php?action=add&refPdt=Z (avec Z l'ID du produit)
+  - L'action pour supprimer un produit dans le panier est déjà codée : index.php?action=del&refPdt=Z (avec Z l'ID du produit)
+  - Eléments de design :
+        Le bouton commander :     border: solid 1px rgba(235, 84, 105);
+                                  background: linear-gradient(135deg, #FF8811 50%, #A04668);
+
+
+
+####################
+4) développer la page d'insertion d'une commande dans la base de données (traitement du formulaire).
+Quelques informations :
+  - URL : index.php?action=commande
+  - Requête SQL : "insert into commande (nom, tel, date, commande) values ('Seb', '0601010101', now(), '{"2":3,"1":1,"6":1}');"
+  Remarque : Les produits sont enregistrés au format JSON à partir du panier de l'utilisateur (les clefs représentent les références des produits et les valeurs les quantités).
+             L'instruction suivante encode le panier au format JSON : $commande = json_encode($_SESSION['panier']);
+
+  - Quand l'ajout de la commande est effectuée on affichera à l'utilisateur une page de remerciement en mentionnant le numéro de la commande qui vient d'être ajouté.
+  Par exemple :    <h1>Merci pour votre commande !</h1>
+                   <p>Vous pouvez passer retirer votre commande quand vous le souhaitez. <br>
+                      Votre commande porte le numéro <strong> XX </strong>.
+                   </p>
+
