@@ -18,4 +18,5 @@ if (isset($_GET['refPdt'])) {
     }
 }
 
-echo $blade->make('panier')->render();
+header('location: index.php?action=panier');
+
